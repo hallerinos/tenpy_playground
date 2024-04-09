@@ -55,12 +55,12 @@ def save_plot_lobs(lobs, M, psi):
 
 
 Bx = By = 0.0
-Bz = -0.5
-D = 1.0
+Bz = -2
+D = 5.0
 Jx = Jy = Jz = -0.5
 
-bc_MPS, N_sweeps, E_tol, bond_dim = 'infinite', 1000, 1e-8, 1
-lattice, mkr, sze, L = 'my_triangular', 'h', 80, 9
+bc_MPS, N_sweeps, E_tol, bond_dim = 'infinite', 1000, 1e-8, 32
+lattice, mkr, sze, L = 'my_triangular', 'h', 800, 7
 bc_lat_y = 'open'
 
 model_params = {
@@ -68,7 +68,7 @@ model_params = {
     'B': [Bx, By, Bz],
     'D' : D,
     'bc_y': bc_lat_y, 'bc_MPS': bc_MPS,
-    'Lx' : 3*L, 'Ly': L, 'lattice': lattice, 'conserve': None
+    'Lx' : L, 'Ly': L, 'lattice': lattice, 'conserve': None
 }
 
 M = MySpinModel(model_params)
