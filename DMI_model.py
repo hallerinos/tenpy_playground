@@ -11,6 +11,7 @@ from tenpy.models.model import CouplingMPOModel, NearestNeighborModel
 from tenpy.models.lattice import Chain
 import tenpy.models.lattice as lat
 from tenpy.tools.params import asConfig
+from my_triangular import my_triangular
 
 __all__ = ['MySpinModel', 'MySpinChain']
 
