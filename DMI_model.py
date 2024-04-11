@@ -15,6 +15,7 @@ Uniform lattice of spin-S sites, coupled by nearest-neighbour interactions.
 
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 
 from tenpy.networks.site import SpinSite
 from tenpy.models.model import CouplingMPOModel, NearestNeighborModel
@@ -74,31 +75,51 @@ class DMI_model(CouplingMPOModel):
         for u in range(len(self.lat.unit_cell)):
             for (Bi, Si) in zip(B, Svec):
                 self.add_onsite(Bi, u, Si)
-        
+
         nn_pairs = self.lat.pairs['nearest_neighbors']
+        ctr = 0
+        Ly = model_params['Ly']
+        fig, ax = plt.subplots()
         for u1, u2, dx in nn_pairs:
             for (Ji, Si) in zip(J, Svec):
                 self.add_coupling(Ji, u1, Si, u2, Si, dx)
             mps_i, mps_j, _, _ = self.lat.possible_couplings(u1, u2, dx)
+            [ax.scatter(self.lat.position(self.lat.mps2lat_idx(i))[0], self.lat.position(self.lat.mps2lat_idx(i))[1], marker='H', s=400, c='black', zorder=-999) for i in mps_i]
             for i, j in zip(mps_i, mps_j):
                 if i > j: # ensure proper ordering for TenPy (operators commute)
                     i, j = j, i
                 ri = self.lat.position(self.lat.mps2lat_idx(i))
                 rj = self.lat.position(self.lat.mps2lat_idx(j))
                 dist = rj-ri
+                fac = 1.0
                 # this works only for Triangular chain!!!
                 if np.linalg.norm(dist) > 1.001:
+                    ctr += 1
+                    # if dist[0] == 0: continue
+                    # ax.scatter(ri[0], ri[1])
+                    # ax.scatter(rj[0], rj[1])
+                    # ax.scatter(dist[0], dist[1], color='black')
+                    # if dist[1] > 1.0:
                     if dist[0] == 0: dist[1] = -1
+                    #     dist[1] = -np.mod(dist[1],5)
                     if dist[0] != 0: dist[1] = -0.5
-                    print(i, j)
-                    print('pbc term')
-                    print(dist)
-                Dvec = D*np.cross([0,0,1], dist/np.linalg.norm(dist))
+                        # dist[0] = np.mod(dist[0],5.*np.sqrt(3))
+                        # dist[1] = -np.mod(dist[1],5)
+                    # print(f'pbc term, sites: {i} : {j}')
+                    # print(dist)
+                    # print(ctr)
+                    # fac = 2.0
+                ax.quiver(ri[0], ri[1], dist[0], dist[1], units='xy', scale=1, color='red')
+                Dvec = fac*D*np.cross([0,0,1], dist/np.linalg.norm(dist))
                 for k in range(3):
                     for l in range(3):
                         for m in range(3):
                             if abs(Dvec[k]*self.epsilon(k,l,m)) > 0 and np.linalg.norm(dist) >= 0.9:
                                 self.add_coupling_term(Dvec[k]*self.epsilon(k,l,m), i, j, Svec[l], Svec[m])
+        ax.set_aspect('equal')
+        # ax.set_ylim([0,20])
+        # ax.set_xlim([0,20])
+        plt.savefig('lattice.png', bbox_inches='tight', pad_inches=0, dpi=600)
         # done
 
 

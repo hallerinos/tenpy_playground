@@ -11,9 +11,10 @@ sequential:
 model_class: DMI_model
 model_params:
     lattice: Triangular
-    Lx: 9
-    Ly: 9
-    bc_y: open
+    Lx: 7
+    Ly: 7
+    # bc_x: open
+    bc_y: periodic
     bc_MPS: infinite
     B: [[0.,0.,-0.5], [0.,0.,-0.6], [0.,0.,-0.7], [0.,0.,-0.8], [0.,0.,-0.9], [0.,0.,-1.0]]
     # B: [[0.,0.,-1.0], [0.,0.,-0.9], [0.,0.,-0.8], [0.,0.,-0.7], [0.,0.,-0.6]]
@@ -23,13 +24,13 @@ model_params:
 
 initial_state_params:
     method: desired_bond_dimension
-    chi: 200
+    chi: 11
 
 algorithm_class: SingleSiteDMRGEngine
 algorithm_params:
     trunc_params:
-        svd_min: 1.e-10
-        chi_max: 200
+        svd_min: 1.e-12
+        chi_max: 11
     mixer: SubspaceExpansion
     mixer_params: {
             amplitude: 1.e-2,
@@ -45,8 +46,7 @@ algorithm_params:
     N_sweeps_check: 10
     max_E_err: 1.e-8
     # max_S_err: 1.e-6
-    norm_err: 1.e-8
-    max_sweeps: 100
+    max_sweeps: 1000
 
 connect_measurements:
     - - tenpy.simulations.measurement
