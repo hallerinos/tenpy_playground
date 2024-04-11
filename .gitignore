@@ -4,4 +4,6 @@
 *.csv
 *.pdf
 *.log
+*.png
+nohup.out
 results/
