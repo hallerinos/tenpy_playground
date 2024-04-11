@@ -1,3 +1,12 @@
+"""This file ``/examples/DMI_model.py`` illustrates customization code for simulations.
+
+Put this file somewhere where it can be importet by python, i.e. either in the working directory
+or somewhere in the ``PYTHON_PATH``. Then you can use it with the parameters file
+``/examples/DMI_model.yml`` from the terminal like this::
+
+    tenpy-run -i DMI_model simulation_custom.yml
+"""
+
 """Nearest-neighbour spin-S models.
 
 Uniform lattice of spin-S sites, coupled by nearest-neighbour interactions.
@@ -5,18 +14,18 @@ Uniform lattice of spin-S sites, coupled by nearest-neighbour interactions.
 # Copyright 2018-2021 TeNPy Developers, GNU GPLv3
 
 import numpy as np
+import pandas as pd
 
 from tenpy.networks.site import SpinSite
 from tenpy.models.model import CouplingMPOModel, NearestNeighborModel
 from tenpy.models.lattice import Chain
 import tenpy.models.lattice as lat
 from tenpy.tools.params import asConfig
-from my_triangular import my_triangular
 
-__all__ = ['MySpinModel', 'MySpinChain']
+__all__ = ['DMI_model', 'MySpinChain']
 
 
-class MySpinModel(CouplingMPOModel):
+class DMI_model(CouplingMPOModel):
     r"""Spin-S sites coupled by nearest neighbour interactions with DMI.
     All parameters are collected in a single dictionary `model_params`, which
     is turned into a :class:`~tenpy.tools.params.Config` object.
@@ -24,11 +33,11 @@ class MySpinModel(CouplingMPOModel):
     Parameters
     ----------
     model_params : :class:`~tenpy.tools.params.Config`
-        Parameters for the model. See :cfg:config:`MySpinModel` below.
+        Parameters for the model. See :cfg:config:`DMI_model` below.
 
     Options
     -------
-    .. cfg:config :: MySpinModel
+    .. cfg:config :: DMI_model
         :include: CouplingMPOModel
 
         S : {0.5, 1, 1.5, 2, ...}
@@ -77,10 +86,13 @@ class MySpinModel(CouplingMPOModel):
                 ri = self.lat.position(self.lat.mps2lat_idx(i))
                 rj = self.lat.position(self.lat.mps2lat_idx(j))
                 dist = rj-ri
-                if np.linalg.norm(dist) > 1.1:
-                    # print('pbc term')
-                    # print(dist)
-                    dist *= -1
+                # this works only for Triangular chain!!!
+                if np.linalg.norm(dist) > 1.001:
+                    if dist[0] == 0: dist[1] = -1
+                    if dist[0] != 0: dist[1] = -0.5
+                    print(i, j)
+                    print('pbc term')
+                    print(dist)
                 Dvec = D*np.cross([0,0,1], dist/np.linalg.norm(dist))
                 for k in range(3):
                     for l in range(3):
@@ -90,10 +102,30 @@ class MySpinModel(CouplingMPOModel):
         # done
 
 
-class MySpinChain(MySpinModel, NearestNeighborModel):
-    """The :class:`MySpinModel` on a Chain, suitable for TEBD.
+class MySpinChain(DMI_model, NearestNeighborModel):
+    """The :class:`DMI_model` on a Chain, suitable for TEBD.
 
-    See the :class:`MySpinModel` for the documentation of parameters.
+    See the :class:`DMI_model` for the documentation of parameters.
     """
     default_lattice = Chain
     force_default_lattice = True
+
+def measure_lobs(results, psi, model, simulation, tol=0.01):
+    pos = np.asarray([model.lat.position(model.lat.mps2lat_idx(i)) for i in range(psi.L)])
+    pos_av = np.mean(pos, axis=0)
+    pos = pos - pos_av
+
+    exp_Sx = psi.expectation_value("Sx")
+    exp_Sy = psi.expectation_value("Sy")
+    exp_Sz = psi.expectation_value("Sz")
+
+    abs_exp_Svec = np.sqrt(np.power(exp_Sx,2) + np.power(exp_Sy,2) + np.power(exp_Sz,2))
+
+    df = pd.DataFrame()
+    df['x'] = pos[:,0]
+    df['y'] = pos[:,1]
+    df['S_x'] = exp_Sx
+    df['S_y'] = exp_Sy
+    df['S_z'] = exp_Sz
+
+    results['lobs'] = df

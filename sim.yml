@@ -1,0 +1,77 @@
+simulation_class: GroundStateSearch
+
+output_filename: results.h5
+
+save_every_x_seconds: 900
+
+sequential:
+    recursive_keys:
+        - model_params.B
+
+model_class: DMI_model
+model_params:
+    lattice: Triangular
+    Lx: 9
+    Ly: 9
+    bc_y: open
+    bc_MPS: infinite
+    B: [[0.,0.,-0.5], [0.,0.,-0.6], [0.,0.,-0.7], [0.,0.,-0.8], [0.,0.,-0.9], [0.,0.,-1.0]]
+    # B: [[0.,0.,-1.0], [0.,0.,-0.9], [0.,0.,-0.8], [0.,0.,-0.7], [0.,0.,-0.6]]
+    # B: [[0.,0.,-0.5]]
+    J: [-0.5, -0.5, -0.5]
+    D: 1.0
+
+initial_state_params:
+    method: desired_bond_dimension
+    chi: 200
+
+algorithm_class: SingleSiteDMRGEngine
+algorithm_params:
+    trunc_params:
+        svd_min: 1.e-10
+        chi_max: 200
+    mixer: SubspaceExpansion
+    mixer_params: {
+            amplitude: 1.e-2,
+            decay: 2.0,
+            disable_after: 20,
+        }
+    diag_method: lanczos
+    lanczos_params:
+        N_max: 3
+        N_min: 2
+        N_cache: 3
+        reortho: False
+    N_sweeps_check: 10
+    max_E_err: 1.e-8
+    # max_S_err: 1.e-6
+    norm_err: 1.e-8
+    max_sweeps: 100
+
+connect_measurements:
+    - - tenpy.simulations.measurement
+      - m_onsite_expectation_value
+      - opname: Sx
+    - - tenpy.simulations.measurement
+      - m_onsite_expectation_value
+      - opname: Sy
+    - - tenpy.simulations.measurement
+      - m_onsite_expectation_value
+      - opname: Sz
+    - - psi_method
+      - wrap correlation_function   # call psi.correlation_function()
+      - results_key: '<Sz Sz>'      # save returned value as results["<Sz Sz>"]
+        ops1: Sz                    # other (necessary) arguments to psi.correlation_function
+        ops2: Sz
+    - - simulation_method
+      - wrap walltime               # "measure" wall clock time it took to run so far
+    - - tenpy.tools.process
+      - wrap memory_usage           # "measure" the current RAM usage in MB
+    - - DMI_model
+      - measure_lobs
+
+log_params:
+    to_stdout: INFO # nothing in yaml -> None in python => no logging to stdout
+    to_file: INFO
+    logger_levels:
+        tenpy.tools.params : WARNING  # suppress INFO/DEBUG output for any logging of parameters
