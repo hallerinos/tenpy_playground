@@ -9,28 +9,36 @@ save_every_x_seconds: 900
 model_class: DMI_model
 model_params:
     lattice: Triangular
-    Lx: 7
-    Ly: 9
-    # bc_x: open
-    bc_y: open
-    bc_MPS: infinite
+    Lx: 4
+    Ly: 4
+    bc_x: periodic
+    bc_y: periodic
+    bc_MPS: finite
     J: [-0.5, -0.5, -0.5]
     D: 1.0
 
 initial_state_params:
     method: desired_bond_dimension
-    chi: 16
+    chi: 1
 
 algorithm_class: SingleSiteDMRGEngine
 algorithm_params:
     trunc_params:
-        svd_min: 1.e-10
-        chi_max: 16
+        svd_min: 1.e-12
+        chi_max: 32
+    chi_list: {
+        0: 1,
+        50: 2,
+        100: 8,
+        # 150: 16,
+        # 200: 32,
+        # 250: 64
+        }
     mixer: SubspaceExpansion
     mixer_params: {
-            amplitude: 1.e-16,
-            decay: 1,
-            disable_after: 10,
+            amplitude: 1.e-18,
+            decay: 2,
+            disable_after: 1,
         }
     diag_method: lanczos
     lanczos_params:
