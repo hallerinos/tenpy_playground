@@ -1,0 +1,71 @@
+simulation_class: GroundStateSearch
+
+save_every_x_seconds: 900
+
+# sequential:
+#     recursive_keys:
+#         - algorithm_params.trunc_params.chi_max
+
+model_class: DMI_model
+model_params:
+    lattice: Triangular
+    Lx: 7
+    Ly: 7
+    # bc_x: open
+    bc_y: open
+    bc_MPS: infinite
+    J: [-0.5, -0.5, -0.5]
+    D: 1
+    Bz: 0
+
+initial_state_params:
+    method: desired_bond_dimension
+    chi: 1
+
+algorithm_class: SingleSiteDMRGEngine
+algorithm_params:
+    trunc_params:
+        svd_min: 1.e-12
+        chi_max: 32
+    chi_list: {0:1}
+    mixer: SubspaceExpansion
+    mixer_params: {
+            amplitude: 1.e-6,
+            decay: 2,
+            disable_after: 4,
+        }
+    diag_method: lanczos
+    lanczos_params:
+        N_max: 3
+        N_min: 2
+        N_cache: 3
+        reortho: False
+    N_sweeps_check: 1
+    max_E_err: 1.e-6
+    max_S_err: 1.e-5
+    max_sweeps: 1000
+
+connect_measurements:
+    - - simulation_method
+      - wrap walltime               # "measure" wall clock time it took to run so far
+    - - tenpy.tools.process
+      - wrap memory_usage           # "measure" the current RAM usage in MB
+    - - DMI_model
+      - measure_lobs
+
+directory: out
+output_filename_params:
+    prefix: dmrg
+    parts:
+        algorithm_params.trunc_params.chi_max: 'chi_{0:d}'
+        model_params.Lx: 'Lx_{0:d}'
+        model_params.Ly: 'Ly_{0:d}'
+        model_params.Bz: 'Bz_{0:.4f}'
+        model_params.bc_MPS: 'bc_{:s}'
+    suffix: .h5
+
+log_params:
+    to_stdout: INFO # nothing in yaml -> None in python => no logging to stdout
+    to_file: INFO
+    logger_levels:
+        tenpy.tools.params : WARNING  # suppress INFO/DEBUG output for any logging of parameters
