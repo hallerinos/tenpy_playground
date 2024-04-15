@@ -12,8 +12,8 @@ mpl.rcParams['figure.figsize'] = ((3.0+3.0/8.0),(3.0+3.0/8.0))
 import pandas as pd
 
 dir = 'out'
-chis = ['32', '64', '128']
-sstr = [f'*chi_{chi}*finite.h5' for chi in chis]
+chis = ['*', '32', '64', '128']
+sstr = [f'*chi_{chi}*finite*.h5' for chi in chis]
 fnss = [np.sort(find_files(s, dir)) for s in sstr]
 
 plot_all = True

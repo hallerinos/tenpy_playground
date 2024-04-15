@@ -81,7 +81,14 @@ class DMI_model(CouplingMPOModel):
 
         nn_pairs = self.lat.pairs['nearest_neighbors']
         ctr = 0
+        Lx = model_params['Lx']
         Ly = model_params['Ly']
+
+        pbc1 = (Ly-1)*self.lat.basis[1]
+        pbc2 = (Ly-1)*self.lat.basis[1]+self.lat.basis[0]
+        pbc3 = (Lx-1)*self.lat.basis[0]
+        pbc4 = (Lx-1)*self.lat.basis[0] + self.lat.basis[1]
+        pbc5 = (Lx-1)*self.lat.basis[0] - (Ly-1)*self.lat.basis[1]
         fig, ax = plt.subplots()
         for u1, u2, dx in nn_pairs:
             for (Ji, Si) in zip(J, Svec):
@@ -98,21 +105,22 @@ class DMI_model(CouplingMPOModel):
                 # this works only for Triangular chain!!!
                 if np.linalg.norm(dist) > 1.001:
                     ctr += 1
-                    # if dist[0] == 0: continue
-                    # ax.scatter(ri[0], ri[1])
-                    # ax.scatter(rj[0], rj[1])
-                    # ax.scatter(dist[0], dist[1], color='black')
-                    # if dist[1] > 1.0:
-                    if dist[0] == 0: dist[1] = -1
-                    #     dist[1] = -np.mod(dist[1],5)
-                    if dist[0] != 0: dist[1] = -0.5
-                        # dist[0] = np.mod(dist[0],5.*np.sqrt(3))
-                        # dist[1] = -np.mod(dist[1],5)
-                    # print(f'pbc term, sites: {i} : {j}')
-                    # print(dist)
-                    # print(ctr)
-                    # fac = 2.0
-                ax.quiver(ri[0], ri[1], dist[0], dist[1], units='xy', scale=1, color='red')
+                    if np.linalg.norm(dist - pbc1) <= 1e-6:
+                        dist = -self.lat.basis[1]
+                        ax.quiver(ri[0], ri[1], dist[0], dist[1], units='xy', scale=1, color='red')
+                    if np.linalg.norm(dist - pbc2) <= 1e-6:
+                        dist = self.lat.basis[0]-self.lat.basis[1]
+                        ax.quiver(ri[0], ri[1], dist[0], dist[1], units='xy', scale=1, color='red')
+                    if np.linalg.norm(dist - pbc3) <= 1e-6:
+                        dist = -self.lat.basis[0]
+                        ax.quiver(ri[0], ri[1], dist[0], dist[1], linewidth=100, units='xy', scale=1, color='green')
+                    if np.linalg.norm(dist - pbc4) <= 1e-6:
+                        dist = self.lat.basis[1]-self.lat.basis[0]
+                        ax.quiver(ri[0], ri[1], dist[0], dist[1], linewidth=100, units='xy', scale=1, color='green')
+                    if np.linalg.norm(dist - pbc5) <= 1e-6:
+                        dist = self.lat.basis[1]-self.lat.basis[0]
+                        ax.quiver(ri[0], ri[1], dist[0], dist[1], linewidth=100, units='xy', scale=1, color='blue')
+                ax.quiver(ri[0], ri[1], dist[0], dist[1], units='xy', scale=1, color='red',zorder=-1)
                 Dvec = fac*D*np.cross([0,0,1], dist/np.linalg.norm(dist))
                 for k in range(3):
                     for l in range(3):
@@ -120,8 +128,8 @@ class DMI_model(CouplingMPOModel):
                             if abs(Dvec[k]*self.epsilon(k,l,m)) > 0 and np.linalg.norm(dist) >= 0.9:
                                 self.add_coupling_term(Dvec[k]*self.epsilon(k,l,m), i, j, Svec[l], Svec[m])
         ax.set_aspect('equal')
-        # ax.set_ylim([0,20])
-        # ax.set_xlim([0,20])
+        ax.set_ylim([-1,5])
+        ax.set_xlim([-1,5])
         plt.savefig('lattice.png', bbox_inches='tight', pad_inches=0, dpi=600)
         # done
 
