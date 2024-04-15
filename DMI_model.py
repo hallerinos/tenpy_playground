@@ -150,6 +150,8 @@ def measure_lobs(results, psi, model, simulation, tol=0.01):
     exp_Sx = psi.expectation_value("Sx")
     exp_Sy = psi.expectation_value("Sy")
     exp_Sz = psi.expectation_value("Sz")
+    exp_Sp = psi.expectation_value("Sp")
+    exp_Sm = psi.expectation_value("Sm")
 
     abs_exp_Svec = np.sqrt(np.power(exp_Sx,2) + np.power(exp_Sy,2) + np.power(exp_Sz,2))
 
@@ -159,5 +161,7 @@ def measure_lobs(results, psi, model, simulation, tol=0.01):
     df['S_x'] = exp_Sx
     df['S_y'] = exp_Sy
     df['S_z'] = exp_Sz
+    df['S_+'] = exp_Sp
+    df['S_-'] = exp_Sm
 
     results['lobs'] = df
