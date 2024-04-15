@@ -7,4 +7,3 @@
 *.png
 nohup.out
 results/
-*.pyc
