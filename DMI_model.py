@@ -67,7 +67,10 @@ class DMI_model(CouplingMPOModel):
     def init_terms(self, model_params):
         J = model_params.get('J', [1.,1.,1.])
         B = model_params.get('B', [0.,0.,0.])
+        Bz = model_params.get('Bz', 0.0)
         D = model_params.get('D', 0.)
+
+        if Bz != 0: B=[0,0,Bz]
 
         Svec = ['Sx', 'Sy', 'Sz']
 
