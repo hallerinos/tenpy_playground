@@ -1,15 +1,41 @@
 import pandas as pd
 import numpy as np
+import yaml
+import tenpy
+import os
+import shutil
 
-dfc = pd.DataFrame()
+dir_out = 'cfg'
 
-nv = 16
-ms = [32,64,128,256,512]
-for m in ms:
-    df = pd.DataFrame()
-    df['Bz'] = np.linspace(-0.6,-0.9,nv)
-    df['chi'] = [m for i in range(0,nv)]
-    dfc = pd.concat([dfc,df], axis=0)
-# print(dfc)
+# clean directory
+try:
+    shutil.rmtree(dir_out)
+except OSError as e:
+    print("Error: %s - %s." % (e.filename, e.strerror))
 
-dfc.to_csv('jobs.csv')
+# create directory for the simulation yml files
+os.makedirs(dir_out, exist_ok=1)
+
+with open('default.yml', 'r') as file:
+    default = yaml.safe_load(file)
+
+cfg = 0
+
+for chi_nmax in range(5, 9):
+    chi_max = 2**(chi_nmax-1)
+    chi_list = {i*10:2**i for i in range(0,chi_nmax)}
+    default['algorithm_params']['chi_list'] = chi_list
+    default['algorithm_params']['trunc_params']['chi_max'] = chi_max
+
+    Bzmin = -0.8
+    Bzmax = -0.4
+    nBz = 32
+    dBz = (Bzmax-Bzmin)/nBz
+    Bzs = [np.round(Bzmin + i*dBz, decimals=4) for i in range(0, nBz)]
+
+    for Bz in Bzs:
+        print(Bz)
+        default['model_params']['Bz'] = float(Bz)
+        with open(f'{dir_out}/{str(cfg).zfill(4)}.yml', 'w') as outfile:
+            yaml.dump(default, outfile, default_flow_style=False)
+        cfg += 1

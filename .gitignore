@@ -5,5 +5,8 @@
 *.pdf
 *.log
 *.png
+*.txt
+*.yml
+*.out
 nohup.out
 results/
