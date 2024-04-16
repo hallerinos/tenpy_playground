@@ -19,10 +19,10 @@
 ##SBATCH --dependency singleton
 ##SBATCH --mail-type=ALL  # Mail events (NONE, BEGIN, END, FAIL, ALL)
 #SBATCH --mail-user=halleritis@gmail.com
-#SBATCH --time=1-00:00:00  # set time
+#SBATCH --time=2-00:00:00  # set time
 #SBATCH --partition=batch
 #__________________________
-#SBATCH -N 20
+#SBATCH -N 40
 #SBATCH --ntasks-per-node 4
 #SBATCH -c 7  # multithreading per task : -c --cpus-per-task <n> request
 #__________________________

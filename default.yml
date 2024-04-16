@@ -1,6 +1,6 @@
 simulation_class: GroundStateSearch
 
-save_every_x_seconds: 900
+save_every_x_seconds: 1800
 
 # sequential:
 #     recursive_keys:
@@ -30,7 +30,7 @@ algorithm_params:
     chi_list: {0:1}
     mixer: SubspaceExpansion
     mixer_params: {
-            amplitude: 1.e-6,
+            amplitude: 1.e-4,
             decay: 2,
             disable_after: 4,
         }
@@ -41,9 +41,9 @@ algorithm_params:
         N_cache: 3
         reortho: False
     N_sweeps_check: 1
-    max_E_err: 1.e-9
-    # max_S_err: 1.e-6
-    max_sweeps: 1000
+    max_E_err: 1.e-8
+    max_S_err: 1.e-5
+    max_sweeps: 200
 
 connect_measurements:
     - - simulation_method
@@ -53,7 +53,7 @@ connect_measurements:
     - - DMI_model
       - measure_lobs
 
-directory: out
+directory: /work/projects/tmqs_projects/skyrmion_liquid/out
 output_filename_params:
     prefix: dmrg
     parts:
