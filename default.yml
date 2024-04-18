@@ -43,7 +43,7 @@ algorithm_params:
     N_sweeps_check: 1
     max_E_err: 1.e-8
     max_S_err: 1.e-5
-    max_sweeps: 200
+    max_sweeps: 300
 
 connect_measurements:
     - - simulation_method
@@ -53,7 +53,7 @@ connect_measurements:
     - - DMI_model
       - measure_lobs
 
-directory: out
+directory: /work/projects/tmqs_projects/skyrmion_liquid/out
 output_filename_params:
     prefix: dmrg
     parts:

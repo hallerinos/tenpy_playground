@@ -21,8 +21,8 @@ with open('default.yml', 'r') as file:
 
 cfg = 0
 
-for chi_nmax in range(7, 10):
-    for ll in range(4,13):
+for chi_nmax in range(5, 12):
+    for ll in range(3,16):
         chi_max = 2**(chi_nmax-1)
         chi_list = {i*10:2**i for i in range(0,chi_nmax)}
         default['algorithm_params']['chi_list'] = chi_list
@@ -31,8 +31,8 @@ for chi_nmax in range(7, 10):
         default['model_params']['Lx'] = ll
         default['model_params']['Ly'] = 7
 
-        Bzmin = -0.7
-        Bzmax = -0.5
+        Bzmin = -0.65
+        Bzmax = -0.60
         nBz = 16
         dBz = (Bzmax-Bzmin)/nBz
         Bzs = [np.round(Bzmin + i*dBz, decimals=4) for i in range(0, nBz)]
