@@ -41,6 +41,9 @@ try:
 except:
     print(f'file: {fn} not readable')
 
+# cL = psi.correlation_length()
+# print(cL/psi.L)
+
 for o12 in ['zz','xx', 'yy', 'xy', 'yz']:
         fig, axs = plt.subplots(3,2,sharex=True,sharey=False)
         axs = axs.ravel()
@@ -68,7 +71,10 @@ for o12 in ['zz','xx', 'yy', 'xy', 'yz']:
             for (idy,Ys) in enumerate([corr, conn, ursell]):
                 data_re = np.real(Ys[0])
                 data_im = np.imag(Ys[0])
-                axs[2*idy].plot(np.asarray(sites2)/psi.L, np.abs(data_re))
+                im = axs[2*idy].plot(np.asarray(sites2)/psi.L, np.abs(data_re), alpha=0.4, linewidth=0.2)
+                col = im[0].get_color()
+                axs[2*idy].scatter(np.asarray(sites2)[::sim['model_params']['Ly']]/psi.L, np.abs(data_re[::sim['model_params']['Ly']]), alpha=0.4, color=col)
+                axs[2*idy].plot(np.asarray(sites2)[::psi.L]/psi.L, np.abs(data_re[::psi.L]), color=col)
                 if np.linalg.norm(data_im) < 1e-5: continue
                 axs[2*idy+1].plot(np.asarray(sites2)/psi.L, data_im)
         [ax.set_yscale('log') for ax in axs]

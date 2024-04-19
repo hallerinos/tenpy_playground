@@ -19,8 +19,9 @@ os.makedirs(out_dir, exist_ok=True)
 chis = ['512']
 sstr = [f'*chi_{chi}*finite.h5' for chi in chis]
 
-# lxs = range(3,16)
-# sstr = [f'*chi_{32}*Lx_{lx}*finite.h5' for lx in lxs]
+lxs = range(3,16)
+lxs = [4]
+sstr = [f'*chi_{128}*Lx_{lx}*finite.h5' for lx in lxs]
 fnss = [np.sort(find_files(s, dir)) for s in sstr]
 
 check_convergence = False
