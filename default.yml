@@ -5,6 +5,12 @@ save_every_x_seconds: 1800
 # sequential:
 #     recursive_keys:
 #         - algorithm_params.trunc_params.chi_max
+cache_params:
+    storage_class: PickleStorage
+    # use_threading: True  # reduce the OMP_NUM_THREADS if you use this!
+    # further specify `directory` or `tmpdir` on the cluster node's local file system
+    # tmpdir: /scratch/local/tmp 
+cache_threshold_chi: 100   # use cache for chi larger than that
 
 model_class: DMI_model
 model_params:

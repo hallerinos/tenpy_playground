@@ -21,8 +21,10 @@ with open('default.yml', 'r') as file:
 
 cfg = 0
 
+Lxs = [251]
+
 for chi_nmax in range(5, 11):
-    for ll in range(4,13):
+    for ll in Lxs:
         chi_max = 2**(chi_nmax-1)
         chi_list = {i*10:2**i for i in range(0,chi_nmax)}
         default['algorithm_params']['chi_list'] = chi_list
