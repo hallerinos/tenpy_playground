@@ -21,10 +21,10 @@
 #SBATCH --mail-user=halleritis@gmail.com
 #SBATCH --time=2-00:00:00  # set time
 #SBATCH --partition=batch
-#SBATCH -N 4
-#SBATCH --ntasks-per-node 16
-#SBATCH --ntasks-per-socket 8
-#SBATCH -c 8  # multithreading per task : -c --cpus-per-task <n> request
+#SBATCH -N 16
+#SBATCH --ntasks-per-node 4
+#SBATCH --ntasks-per-socket 2
+#SBATCH -c 32  # multithreading per task : -c --cpus-per-task <n> request
 #SBATCH -o logs/%x-%j.out  # log goes into logs/<jobname>-<jobid>.out
 # mkdir -p logs
 # rm "logs/*.log"

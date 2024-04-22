@@ -22,7 +22,7 @@
 #SBATCH --time=1-00:00:00  # set time
 #SBATCH --partition=batch
 #__________________________
-#SBATCH -N 32
+#SBATCH -N 16
 #SBATCH --ntasks-per-node 2
 #SBATCH --mem 112G
 #SBATCH -c 14  # multithreading per task : -c --cpus-per-task <n> request
