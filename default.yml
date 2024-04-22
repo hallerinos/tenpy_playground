@@ -36,9 +36,9 @@ algorithm_params:
     chi_list: {0: 1}
     mixer: SubspaceExpansion
     mixer_params: {
-            amplitude: 1.e-4,
-            decay: 2,
-            disable_after: 4,
+            amplitude: 1.e-2,
+            decay: 1.5,
+            disable_after: 9,
         }
     diag_method: lanczos
     lanczos_params:
@@ -59,7 +59,7 @@ connect_measurements:
     - - DMI_model
       - measure_lobs
 
-directory: /work/projects/tmqs_projects/skyrmion_liquid/out
+directory: /work/projects/tmqs_projects/data_SkL/out
 output_filename_params:
     prefix: dmrg
     parts:

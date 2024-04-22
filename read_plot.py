@@ -12,7 +12,7 @@ mpl.rcParams['figure.figsize'] = (2.0*(3.0+3.0/8.0),(3.0+3.0/8.0))
 
 import pandas as pd
 
-dir = '/work/projects/tmqs_projects/skyrmion_liquid/out'
+dir = '/work/projects/tmqs_projects/data_SkL/out'
 out_dir = 'plots'
 os.makedirs(out_dir, exist_ok=True)
 
@@ -20,11 +20,11 @@ chis = ['512']
 sstr = [f'*chi_{chi}*finite.h5' for chi in chis]
 
 lxs = range(3,16)
-lxs = [4]
+lxs = [4,5,6,7,8,9,10,11]
 sstr = [f'*chi_{128}*Lx_{lx}*finite.h5' for lx in lxs]
 fnss = [np.sort(find_files(s, dir)) for s in sstr]
 
-check_convergence = False
+check_convergence = True
 skip_bad = True
 plot_snap = True
 plot_mz = True
@@ -162,7 +162,7 @@ for (idfns,fns) in enumerate(fnss):
         ax.scatter(*av_Mz, color=conv_cols)
         ax.set_xlabel('$B_z/J$')
         ax.set_ylabel('$-m_z$')
-        ax.set_xlim([0.595,0.655])
+        ax.set_xlim([0.5,0.8])
         ax.set_ylim([-0.45,-0.3])
         # ax.set_ylim([np.minimum(av_Mz[1,:]), np.maximum(av_Mz[1,:])])
         # ax.set_title(f'System sizes: {sim['model_params']['Lx']}$\\times${sim['model_params']['Ly']}')
@@ -171,7 +171,7 @@ for (idfns,fns) in enumerate(fnss):
         ax.scatter(*av_norm, color=conv_cols)
         ax.set_xlabel('$B_z/J$')
         ax.set_ylabel('average spin norm')
-        ax.set_xlim([0.595,0.655])
+        ax.set_xlim([0.5,0.8])
         ax.set_ylim([0.35,0.51])
         # ax.set_xlim([np.minimum(av_norm[0,:]), np.maximum(av_norm[0,:])])
         # ax.set_ylim([np.minimum(av_norm[1,:]), np.maximum(av_norm[1,:])])

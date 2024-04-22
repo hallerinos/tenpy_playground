@@ -21,9 +21,9 @@ with open('default.yml', 'r') as file:
 
 cfg = 0
 
-Lxs = [251]
+Lxs = range(4,12)
 
-for chi_nmax in range(5, 11):
+for chi_nmax in [9]:
     for ll in Lxs:
         chi_max = 2**(chi_nmax-1)
         chi_list = {i*10:2**i for i in range(0,chi_nmax)}
@@ -35,7 +35,7 @@ for chi_nmax in range(5, 11):
 
         Bzmin = -0.8
         Bzmax = -0.5
-        nBz = 16
+        nBz = 8
         dBz = (Bzmax-Bzmin)/nBz
         Bzs = [np.round(Bzmin + i*dBz, decimals=4) for i in range(0, nBz)]
 
