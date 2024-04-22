@@ -12,24 +12,24 @@ mpl.rcParams['figure.figsize'] = (2.0*(3.0+3.0/8.0),(3.0+3.0/8.0))
 
 import pandas as pd
 
-dir = '/work/projects/tmqs_projects/data_SkL/out'
+dir = 'out'
 out_dir = 'plots'
 os.makedirs(out_dir, exist_ok=True)
 
-chis = ['512']
+chis = ['32']
 sstr = [f'*chi_{chi}*finite.h5' for chi in chis]
 
-lxs = range(3,16)
-lxs = [4,5,6,7,8,9,10,11]
-sstr = [f'*chi_{128}*Lx_{lx}*finite.h5' for lx in lxs]
+# lxs = range(3,16)
+# lxs = [4,5,6,7,8,9,10,11]
+# sstr = [f'*chi_{128}*Lx_{lx}*finite.h5' for lx in lxs]
 fnss = [np.sort(find_files(s, dir)) for s in sstr]
 
 check_convergence = True
 skip_bad = True
 plot_snap = True
 plot_mz = True
-ms = 38
-mkr = 'H'
+ms = 14
+mkr = 's'
 
 for (idfns,fns) in enumerate(fnss):
     av_Mz = np.zeros((2,len(fns)))
