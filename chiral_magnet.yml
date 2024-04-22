@@ -1,0 +1,74 @@
+simulation_class: GroundStateSearch
+
+save_every_x_seconds: 1800
+
+# sequential:
+#     recursive_keys:
+#         - algorithm_params.trunc_params.chi_max
+cache_params:
+    storage_class: PickleStorage
+    # use_threading: True  # reduce the OMP_NUM_THREADS if you use this!
+    # further specify `directory` or `tmpdir` on the cluster node's local file system
+    # tmpdir: /scratch/local/tmp 
+cache_threshold_chi: 100   # use cache for chi larger than that
+
+model_class: chiral_magnet
+model_params:
+    lattice: Square
+    Lx: 7
+    Ly: 7
+    bc_x: periodic
+    bc_y: periodic
+    bc_classical: True
+    bc_MPS: finite
+    J: [-0.5, -0.5, -0.5]
+    D: [0., 0., 1.]
+    Bz: 0
+
+initial_state_params:
+    method: desired_bond_dimension
+    chi: 1
+
+algorithm_class: SingleSiteDMRGEngine
+algorithm_params:
+    trunc_params:
+        svd_min: 1.e-12
+        chi_max: 32
+    chi_list: {0: 1}
+    mixer: SubspaceExpansion
+    mixer_params: {
+            amplitude: 1.e-2,
+            decay: 1.5,
+            disable_after: 9,
+        }
+    diag_method: lanczos
+    lanczos_params:
+        N_max: 20
+        N_min: 2
+        N_cache: 3
+        reortho: False
+    N_sweeps_check: 1
+    max_E_err: 1.e-8
+    max_S_err: 1.e-5
+    max_sweeps: 300
+
+connect_measurements:
+    - - DMI_model
+      - measure_lobs
+
+directory: out
+output_filename_params:
+    prefix: dmrg
+    parts:
+        algorithm_params.trunc_params.chi_max: 'chi_{0:d}'
+        model_params.Lx: 'Lx_{0:d}'
+        model_params.Ly: 'Ly_{0:d}'
+        model_params.Bz: 'Bz_{0:.4f}'
+        model_params.bc_MPS: 'bc_{:s}'
+    suffix: .h5
+
+log_params:
+    to_stdout: INFO # nothing in yaml -> None in python => no logging to stdout
+    to_file: INFO
+    logger_levels:
+        tenpy.tools.params : WARNING  # suppress INFO/DEBUG output for any logging of parameters

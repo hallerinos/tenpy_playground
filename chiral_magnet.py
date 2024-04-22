@@ -23,10 +23,10 @@ from tenpy.models.lattice import Chain, SimpleLattice
 import tenpy.models.lattice as lat
 from tenpy.tools.params import asConfig
 
-__all__ = ['chiral_magnet_square', 'MySpinChain']
+__all__ = ['chiral_magnet', 'MySpinChain']
 
 
-class chiral_magnet_square(CouplingMPOModel):
+class chiral_magnet(CouplingMPOModel):
     r"""Spin-S sites coupled by nearest neighbour interactions with DMI.
     All parameters are collected in a single dictionary `model_params`, which
     is turned into a :class:`~tenpy.tools.params.Config` object.
@@ -67,12 +67,12 @@ class chiral_magnet_square(CouplingMPOModel):
     def init_terms(self, model_params):
         J = np.asarray(model_params.get('J', [-0.5,-0.5,-0.5]))
         B = np.asarray(model_params.get('B', [0.,0.,0.]))
-        Bz = model_params.get('Bz', -1.0)
-        D = np.asarray(model_params.get('D', [0., 0., 1.]))
+        Bz = model_params.get('Bz', -0.125)
+        D = np.asarray(model_params.get('D', [0., 0., 1.0]))
 
         if Bz != 0: B=[0,0,Bz]
 
-        J = 0.*J
+        # J = 0.*J
 
         Svec = ['Sx', 'Sy', 'Sz']
 
@@ -88,8 +88,6 @@ class chiral_magnet_square(CouplingMPOModel):
         fig = plt.figure()
         ax = fig.gca()
         for u1, u2, dx in nn_pairs:
-            for (Ji, Si) in zip(J, Svec):
-                self.add_coupling(Ji, u1, Si, u2, Si, dx)
             mps_i, mps_j, _, _ = self.lat.possible_couplings(u1, u2, dx)
             for i, j in zip(mps_i, mps_j):
                 # print(f'Order: {i,j}')
@@ -100,14 +98,13 @@ class chiral_magnet_square(CouplingMPOModel):
                 rj = self.lat.position(self.lat.mps2lat_idx(j))
                 dist = rj-ri
 
+                pt = False
                 if np.linalg.norm(dist) > 1+1e-6:
-                    # print('PBC term')
-                    # print(dist)
                     if dist[0]>0:
                         dist = np.asarray([-1., 0.])
                     if dist[1]>0:
                         dist = np.asarray([0., -1.])
-                    # print(dist)
+                    pt = True
                 ax.quiver(*ri, dist[0], dist[1], units='xy', scale=1, zorder=-1)
                 sc = ax.scatter(*ri, marker='x', s=100)
                 col = sc.get_facecolors()[0].tolist()
@@ -121,13 +118,23 @@ class chiral_magnet_square(CouplingMPOModel):
                     for l in range(3):
                         for m in range(3):
                             if abs(Dvec[k]*self.epsilon(k,l,m)) > 0 and np.linalg.norm(dist) >= 0.9:
-                                self.add_coupling_term(Dvec[k]*self.epsilon(k,l,m), i, j, Svec[l], Svec[m])
+                                if pt and model_params['bc_classical']:
+                                    if m==2: self.add_coupling_term(Dvec[k]*self.epsilon(k,l,m)/2.0, i, j, Svec[l], "Id")
+                                    if l==2: self.add_coupling_term(Dvec[k]*self.epsilon(k,l,m)/2.0, i, j, "Id", Svec[m])
+                                else:
+                                    self.add_coupling_term(Dvec[k]*self.epsilon(k,l,m), i, j, Svec[l], Svec[m])
+                if pt and model_params['bc_classical']:
+                    self.add_coupling_term(J[2]/2, i, j, "Sz", "Id")
+                    self.add_coupling_term(J[2]/2, i, j, "Id", "Sz")
+                else:
+                    for (Ji, Si) in zip(J, Svec):
+                        self.add_coupling_term(Ji, i, j, Si, Si)
                 ax.set_aspect('equal')
         plt.tight_layout()
         plt.savefig('latt.png', dpi=600)
 
 
-class MySpinChain(chiral_magnet_square, NearestNeighborModel):
+class MySpinChain(chiral_magnet, NearestNeighborModel):
     """The :class:`chiral_magnet` on a Chain, suitable for TEBD.
 
     See the :class:`chiral_magnet` for the documentation of parameters.

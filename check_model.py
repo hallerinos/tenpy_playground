@@ -8,7 +8,24 @@ from tenpy.networks.mps import MPS
 import h5py
 from tenpy.tools import hdf5_io
 
+import logging.config
+
+# create the config file for logs
+conf = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {'custom': {'format': '%(levelname)-8s: %(message)s'}},
+    'handlers': {'to_stdout': {'class': 'logging.StreamHandler',
+                 'formatter': 'custom',
+                 'level': 'INFO',
+                 'stream': 'ext://sys.stdout'}},
+    'root': {'handlers': ['to_stdout'], 'level': 'DEBUG'},
+}
+
 from chiral_magnet import *
+
+# start logging
+logging.config.dictConfig(conf)
 
 # compute local observables
 def compute_lobs(psi):
@@ -20,26 +37,28 @@ def compute_lobs(psi):
 
     return [exp_Sx, exp_Sy, exp_Sz, abs_exp_Svec]
 
-bond_dim = 32
+bond_dim = 128
 
 model_params = {
-        'bc_x': 'periodic', 'bc_y': 'periodic', 'bc_MPS': 'finite',
-        'Lx' : 5, 'Ly': 5, 'lattice': 'my_square', 'conserve': None,
+        'bc_x': 'open', 'bc_y': 'periodic', 'bc_MPS': 'finite',
+        'bc_classical': True,
+        'Lx' : 3, 'Ly': 4, 'lattice': 'my_square', 'conserve': None,
+        'Bz' : -1.0
     }
 
-M = chiral_magnet_square(model_params)
+M = chiral_magnet(model_params)
 
 sites = M.lat.mps_sites()
 
 psi = MPS.from_desired_bond_dimension(sites, bond_dim, bc='finite')
 
 # generate a random initial state
-TEBD_params = {'N_steps': 1, 'trunc_params':{'chi_max': bond_dim}}
-eng = tebd.RandomUnitaryEvolution(psi, TEBD_params)
-eng.run()
+# TEBD_params = {'N_steps': 1, 'trunc_params':{'chi_max': bond_dim}}
+# eng = tebd.RandomUnitaryEvolution(psi, TEBD_params)
+# eng.run()
 
-psi.canonical_form()
-lobs = compute_lobs(psi)
+# psi.canonical_form()
+# lobs = compute_lobs(psi)
 
 dmrg_params = {
     'mixer': 'SubspaceExpansion',  # no subspace expansion
@@ -95,6 +114,7 @@ eng = dmrg.SingleSiteDMRGEngine(psi, M, dmrg_params)
 # eng = vumps.SingleSiteVUMPSEngine(psi, M, vumps_params)
 
 E, psi = eng.run()
+print(E)
 
 
 # plt.figure(figsize=(5, 6))
