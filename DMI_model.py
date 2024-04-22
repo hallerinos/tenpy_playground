@@ -89,12 +89,12 @@ class DMI_model(CouplingMPOModel):
         pbc3 = (Lx-1)*self.lat.basis[0]
         pbc4 = (Lx-1)*self.lat.basis[0] + self.lat.basis[1]
         pbc5 = (Lx-1)*self.lat.basis[0] - (Ly-1)*self.lat.basis[1]
-        fig, ax = plt.subplots()
+        # fig, ax = plt.subplots()
         for u1, u2, dx in nn_pairs:
             for (Ji, Si) in zip(J, Svec):
                 self.add_coupling(Ji, u1, Si, u2, Si, dx)
             mps_i, mps_j, _, _ = self.lat.possible_couplings(u1, u2, dx)
-            [ax.scatter(self.lat.position(self.lat.mps2lat_idx(i))[0], self.lat.position(self.lat.mps2lat_idx(i))[1], marker='H', s=400, c='black', zorder=-999) for i in mps_i]
+            # [ax.scatter(self.lat.position(self.lat.mps2lat_idx(i))[0], self.lat.position(self.lat.mps2lat_idx(i))[1], marker='H', s=400, c='black', zorder=-999) for i in mps_i]
             for i, j in zip(mps_i, mps_j):
                 if i > j: # ensure proper ordering for TenPy (operators commute)
                     i, j = j, i
@@ -107,30 +107,30 @@ class DMI_model(CouplingMPOModel):
                     ctr += 1
                     if np.linalg.norm(dist - pbc1) <= 1e-6:
                         dist = -self.lat.basis[1]
-                        ax.quiver(ri[0], ri[1], dist[0], dist[1], units='xy', scale=1, color='red')
+                        # ax.quiver(ri[0], ri[1], dist[0], dist[1], units='xy', scale=1, color='red')
                     if np.linalg.norm(dist - pbc2) <= 1e-6:
                         dist = self.lat.basis[0]-self.lat.basis[1]
-                        ax.quiver(ri[0], ri[1], dist[0], dist[1], units='xy', scale=1, color='red')
+                        # ax.quiver(ri[0], ri[1], dist[0], dist[1], units='xy', scale=1, color='red')
                     if np.linalg.norm(dist - pbc3) <= 1e-6:
                         dist = -self.lat.basis[0]
-                        ax.quiver(ri[0], ri[1], dist[0], dist[1], linewidth=100, units='xy', scale=1, color='green')
+                        # ax.quiver(ri[0], ri[1], dist[0], dist[1], linewidth=100, units='xy', scale=1, color='green')
                     if np.linalg.norm(dist - pbc4) <= 1e-6:
                         dist = self.lat.basis[1]-self.lat.basis[0]
-                        ax.quiver(ri[0], ri[1], dist[0], dist[1], linewidth=100, units='xy', scale=1, color='green')
+                        # ax.quiver(ri[0], ri[1], dist[0], dist[1], linewidth=100, units='xy', scale=1, color='green')
                     if np.linalg.norm(dist - pbc5) <= 1e-6:
                         dist = self.lat.basis[1]-self.lat.basis[0]
-                        ax.quiver(ri[0], ri[1], dist[0], dist[1], linewidth=100, units='xy', scale=1, color='blue')
-                ax.quiver(ri[0], ri[1], dist[0], dist[1], units='xy', scale=1, color='red',zorder=-1)
+                        # ax.quiver(ri[0], ri[1], dist[0], dist[1], linewidth=100, units='xy', scale=1, color='blue')
+                # ax.quiver(ri[0], ri[1], dist[0], dist[1], units='xy', scale=1, color='red',zorder=-1)
                 Dvec = fac*D*np.cross([0,0,1], dist/np.linalg.norm(dist))
                 for k in range(3):
                     for l in range(3):
                         for m in range(3):
                             if abs(Dvec[k]*self.epsilon(k,l,m)) > 0 and np.linalg.norm(dist) >= 0.9:
                                 self.add_coupling_term(Dvec[k]*self.epsilon(k,l,m), i, j, Svec[l], Svec[m])
-        ax.set_aspect('equal')
-        ax.set_ylim([-1,5])
-        ax.set_xlim([-1,5])
-        plt.savefig('lattice.png', bbox_inches='tight', pad_inches=0, dpi=600)
+        # ax.set_aspect('equal')
+        # ax.set_ylim([-1,5])
+        # ax.set_xlim([-1,5])
+        # plt.savefig('lattice.png', bbox_inches='tight', pad_inches=0, dpi=600)
         # done
 
 

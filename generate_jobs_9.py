@@ -22,6 +22,7 @@ with open('default.yml', 'r') as file:
 cfg = 0
 
 Lxs = range(4,12)
+Lxs = [27]
 
 for chi_nmax in [9]:
     for ll in Lxs:
@@ -38,6 +39,7 @@ for chi_nmax in [9]:
         nBz = 8
         dBz = (Bzmax-Bzmin)/nBz
         Bzs = [np.round(Bzmin + i*dBz, decimals=4) for i in range(0, nBz)]
+        Bzs = [-0.7]
 
         for Bz in Bzs:
             default['model_params']['Bz'] = float(Bz)

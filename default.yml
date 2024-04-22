@@ -19,7 +19,7 @@ model_params:
     Ly: 7
     # bc_x: open
     bc_y: open
-    bc_MPS: infinite
+    bc_MPS: finite
     J: [-0.5, -0.5, -0.5]
     D: 1
     Bz: 0
@@ -59,7 +59,7 @@ connect_measurements:
     - - DMI_model
       - measure_lobs
 
-directory: /work/projects/tmqs_projects/data_SkL/out
+directory: out
 output_filename_params:
     prefix: dmrg
     parts:
