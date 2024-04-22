@@ -53,7 +53,7 @@ algorithm_params:
     max_sweeps: 300
 
 connect_measurements:
-    - - DMI_model
+    - - chiral_magnet
       - measure_lobs
 
 directory: out
