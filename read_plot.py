@@ -12,24 +12,24 @@ mpl.rcParams['figure.figsize'] = (2.0*(3.0+3.0/8.0),(3.0+3.0/8.0))
 
 import pandas as pd
 
-dir = '/work/projects/tmqs_projects/data_SkL/out'
+dir = 'out'
 out_dir = 'plots'
 os.makedirs(out_dir, exist_ok=True)
 
-chis = ['512']
+chis = ['32']
 sstr = [f'*chi_{chi}*finite.h5' for chi in chis]
 
-lxs = range(3,16)
-lxs = [4,5,6,7,8,9,10,11]
-sstr = [f'*chi_{128}*Lx_{lx}*finite.h5' for lx in lxs]
+# lxs = range(3,16)
+# lxs = [4,5,6,7,8,9,10,11]
+# sstr = [f'*chi_{128}*Lx_{lx}*finite.h5' for lx in lxs]
 fnss = [np.sort(find_files(s, dir)) for s in sstr]
 
 check_convergence = True
-skip_bad = True
+skip_bad = False
 plot_snap = True
 plot_mz = True
-ms = 38
-mkr = 'H'
+ms = 45
+mkr = 's'
 
 for (idfns,fns) in enumerate(fnss):
     av_Mz = np.zeros((2,len(fns)))
@@ -87,7 +87,7 @@ for (idfns,fns) in enumerate(fnss):
             if skip_bad:
                 if check_convergence and not converged:
                     continue
-            fig, axs = plt.subplots(2,2)
+            fig, axs = plt.subplots(2,1)
             axs = axs.ravel()
             ax = axs[0]
             imag = ax.scatter(df_re[:,0], df_re[:,1], marker=mkr, edgecolor='None', s=ms, cmap='RdBu_r', c=df_re[:,4], vmin=-0.5, vmax=0.5)
@@ -113,32 +113,6 @@ for (idfns,fns) in enumerate(fnss):
             ax.set_aspect('equal')
             fig.colorbar(imag)
             ax.set_title('$|\\langle \\vec S_{i} \\rangle|$')
-
-            ax = axs[2]
-            spabs = (df_re[:,5]**2+df_im[:,5]**2)**0.5
-            imag = ax.scatter(df_re[:,0], df_re[:,1], marker=mkr, edgecolor='None', s=ms, cmap='viridis', c=spabs)
-            ax.quiver(df_re[:,0], df_re[:,1], df_re[:,5], df_im[:,5], units='xy', width=0.07, scale=0.5, pivot='middle', color='white')
-            mx = np.asarray([np.min(df_re[:,0]),np.max(df_re[:,0])])
-            my = np.asarray([np.min(df_re[:,1]),np.max(df_re[:,1])])
-            ax.set_xlim(1.25*mx)
-            ax.set_ylim(1.25*my)
-            ax.axis('off')
-            ax.set_aspect('equal')
-            fig.colorbar(imag)
-            ax.set_title('$(\\Re,\\Im,|\\cdot|)\\langle\\hat S_{i,+}\\rangle$')
-
-            ax = axs[3]
-            smabs = (df_re[:,6]**2+df_im[:,6]**2)**0.5
-            imag = ax.scatter(df_re[:,0], df_re[:,1], marker=mkr, edgecolor='None', s=ms, cmap='viridis', c=smabs)
-            ax.quiver(df_re[:,0], df_re[:,1], df_re[:,6], df_im[:,6], units='xy', width=0.07, scale=0.5, pivot='middle', color='white')
-            mx = np.asarray([np.min(df_re[:,0]),np.max(df_re[:,0])])
-            my = np.asarray([np.min(df_re[:,1]),np.max(df_re[:,1])])
-            ax.set_xlim(1.25*mx)
-            ax.set_ylim(1.25*my)
-            ax.axis('off')
-            ax.set_aspect('equal')
-            fig.colorbar(imag)
-            ax.set_title('$(\\Re,\\Im,|\\cdot|)\\langle\\hat S_{i,-}\\rangle$')
 
             fig.suptitle(f'Energy density {ene}', fontsize=16)
 
