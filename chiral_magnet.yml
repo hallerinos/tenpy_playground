@@ -14,7 +14,7 @@ cache_threshold_chi: 100   # use cache for chi larger than that
 
 model_class: chiral_magnet
 model_params:
-    lattice: Square
+    lattice: my_square
     Lx: 7
     Ly: 7
     bc_x: periodic

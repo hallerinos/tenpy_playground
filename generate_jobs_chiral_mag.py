@@ -22,7 +22,7 @@ with open('chiral_magnet.yml', 'r') as file:
 cfg = 0
 
 Lxs = range(4,12)
-Lxs = [61]
+Lxs = [151]
 
 for chi_nmax in [6,7,8,9]:
     for ll in Lxs:

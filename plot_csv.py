@@ -13,8 +13,8 @@ mpl.rcParams['text.usetex'] = True
 
 import pandas as pd
 
-dir = '/work/projects/tmqs_projects/data_SkL/out/'
-sstr = '*chi_64*Lx_251*finite.csv'
+dir = 'out/'
+sstr = '*chi_128*Lx_151*finite.csv'
 fns = np.sort(find_files(sstr, dir))
 
 out_dir = 'plots/'
@@ -27,21 +27,32 @@ for fn in fns:
 
     print('CSV loaded')
 
-    mkr = 'H'
+    mkr = 's'
     ms = 600
-    ms = 3
+    ms = 4
 
     fig, ax = plt.subplots(1,1)
-    imag = ax.scatter(df['x'], df['y'], marker=mkr, edgecolor='None', s=ms, cmap='viridis', c=df['S'])
+    imag = ax.scatter(df['x'], df['y'], marker=mkr, edgecolor='None', s=ms, cmap='viridis', c=df['S_z'], vmin=-0.5, vmax=0.5)
     ax.quiver(df['x'], df['y'], df['S_x'], df['S_y'], units='xy', width=0.07, scale=0.5, pivot='middle', color='white')
     ax.set_aspect('equal')
     ax.set_title('$\\langle \\vec S_{i} \\rangle$')
 
-    fig.colorbar(imag)
+    # fig.colorbar(imag)
     ax.axis('off')
 
     fn_repl = fn.replace(dir, out_dir).replace('.csv', '.jpg')
     plt.tight_layout()
+    plt.savefig(fn_repl, dpi=1200, bbox_inches='tight')
+    plt.close()
+    print(fn_repl)
+
+    fig, ax = plt.subplots(1,1)
+    ys = np.unique(df['y'])
+    for ny in ys:
+        df_x = df[abs(df['y']-ny)<1e-4]
+        ax.plot(df_x['x'], df_x['vNEE'])
+    plt.tight_layout()
+    fn_repl = fn.replace(dir, out_dir).replace('.csv', 'EE.jpg')
     plt.savefig(fn_repl, dpi=1200, bbox_inches='tight')
     plt.close()
     print(fn_repl)

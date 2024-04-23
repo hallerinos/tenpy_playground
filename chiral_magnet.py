@@ -101,9 +101,11 @@ class chiral_magnet(CouplingMPOModel):
                 pt = False
                 if np.linalg.norm(dist) > 1+1e-6:
                     if dist[0]>0:
-                        dist = np.asarray([-1., 0.])
+                        if model_params['lattice'] == 'Square':
+                            dist = np.asarray([-1., 0.])
                     if dist[1]>0:
-                        dist = np.asarray([0., -1.])
+                        if model_params['lattice'] == 'Square':
+                            dist = np.asarray([0., -1.])
                     pt = True
                 ax.quiver(*ri, dist[0], dist[1], units='xy', scale=1, zorder=-1)
                 sc = ax.scatter(*ri, marker='x', s=100)
