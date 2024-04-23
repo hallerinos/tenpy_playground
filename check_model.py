@@ -8,6 +8,8 @@ from tenpy.networks.mps import MPS
 import h5py
 from tenpy.tools import hdf5_io
 
+import pandas as pd
+
 import logging.config
 
 # create the config file for logs
@@ -77,44 +79,25 @@ dmrg_params = {
     'N_sweeps_check': 1,
     'max_E_err': 1e-8,
     'max_S_err': 1e-6,
-    'max_sweeps': 10,
+    'max_sweeps': 1,
     'trunc_params': {
         'chi_max': bond_dim,
         'svd_min': 1.e-12,
     },
 }
-vumps_params = {
-    'mixer': None,  # no subspace expansion
-    'mixer_params': {
-        'amplitude': 1.e-3,
-        'decay': 2.0,
-        'disable_after': 10,
-    },
-    'diag_method': 'lanczos',
-    'lanczos_params': {
-        'N_max': 5,  # fix the number of Lanczos iterations: the number of `matvec` calls
-        'N_min': 2,
-        'N_cache': 5,  # keep the states during Lanczos in memory
-        'reortho': False,
-    },
-    'N_sweeps_check': 10,
-    'trunc_params': {
-        'chi_max': bond_dim,
-        'svd_min': 1.e-14,
-    },
-    'max_sweeps': 10,
-    'max_split_err': 1e-8,  # different criteria than DMRG
-    'max_E_err': 1e-8,
-    'max_S_err': 1.e-8,
-}
 
 # eng = dmrg_parallel.DMRGThreadPlusHC(psi, M, dmrg_params)
-eng = dmrg.SingleSiteDMRGEngine(psi, M, dmrg_params)
+# eng = dmrg.SingleSiteDMRGEngine(psi, M, dmrg_params)
 # eng = dmrg.TwoSiteDMRGEngine(psi, M, dmrg_params)
 # eng = vumps.SingleSiteVUMPSEngine(psi, M, vumps_params)
 
-E, psi = eng.run()
-print(E)
+info = dmrg.run(psi, M, dmrg_params)
+# print(info)
+# print(info['E'])
+keys = ['sweep', 'E', 'Delta_E', 'S', 'max_S', 'max_E_trunc']
+df = pd.DataFrame()
+for k in keys:
+    df[k] = info['sweep_statistics'][k]
 
 
 # plt.figure(figsize=(5, 6))

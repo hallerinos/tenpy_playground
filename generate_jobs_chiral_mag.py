@@ -23,7 +23,7 @@ cfg = 0
 
 Lxs = range(6,7)
 
-for chi_nmax in [7,8,9]:
+for chi_nmax in [6,7,8]:
     for ll in Lxs:
         chi_max = 2**(chi_nmax-1)
         chi_list = {i*10:2**i for i in range(0,chi_nmax)}

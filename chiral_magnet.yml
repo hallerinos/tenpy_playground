@@ -52,9 +52,10 @@ algorithm_params:
     max_S_err: 1.e-6
     max_sweeps: 300
 
-connect_measurements:
-    - - chiral_magnet
-      - measure_lobs
+use_default_measurements: False
+measure_initial: False
+measure_at_algorithm_checkpoints: False
+save_stats: False
 
 directory: out
 output_filename_params:
