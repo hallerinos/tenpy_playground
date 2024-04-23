@@ -29,18 +29,18 @@ initial_state_params:
     method: desired_bond_dimension
     chi: 1
 
-algorithm_class: SingleSiteDMRGEngine
+algorithm_class: TwoSiteDMRGEngine
 algorithm_params:
     trunc_params:
         svd_min: 1.e-12
         chi_max: 8
     chi_list: {0: 1, 10: 8, 20: 8}
-    mixer: SubspaceExpansion
-    mixer_params: {
-            amplitude: 1.e-0,
-            decay: 10,
-            disable_after: 9,
-        }
+    # mixer: SubspaceExpansion
+    # mixer_params: {
+    #         amplitude: 1,
+    #         decay: 1,
+    #         disable_after: 9,
+    #     }
     diag_method: lanczos
     lanczos_params:
         N_max: 20

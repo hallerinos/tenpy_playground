@@ -21,7 +21,7 @@ with open('chiral_magnet.yml', 'r') as file:
 
 cfg = 0
 
-Lxs = range(1,14)
+Lxs = range(6,7)
 
 for chi_nmax in [7,8,9]:
     for ll in Lxs:
@@ -33,8 +33,8 @@ for chi_nmax in [7,8,9]:
         default['model_params']['Lx'] = ll
         default['model_params']['Ly'] = 5
 
-        Bzmin = -0.6
-        Bzmax = -0.4
+        Bzmin = -0.59
+        Bzmax = -0.5
         nBz = 8
         dBz = (Bzmax-Bzmin)/nBz
         Bzs = [np.round(Bzmin + i*dBz, decimals=4) for i in range(0, nBz)]
