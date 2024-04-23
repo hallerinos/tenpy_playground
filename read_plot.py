@@ -13,12 +13,10 @@ mpl.rcParams['figure.figsize'] = (2.0*(3.0+3.0/8.0),(3.0+3.0/8.0))
 import pandas as pd
 
 dir = 'out'
-dir = 'out'
 out_dir = 'plots'
 os.makedirs(out_dir, exist_ok=True)
 
-chis = ['32']
-chis = ['32']
+chis = ['8']
 sstr = [f'*chi_{chi}*finite.h5' for chi in chis]
 
 # lxs = range(3,16)

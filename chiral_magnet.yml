@@ -15,15 +15,15 @@ cache_threshold_chi: 100   # use cache for chi larger than that
 model_class: chiral_magnet
 model_params:
     lattice: my_square
-    Lx: 7
-    Ly: 7
-    bc_x: periodic
+    Lx: 5
+    Ly: 5
+    # bc_x: open
     bc_y: periodic
     bc_classical: True
-    bc_MPS: finite
+    bc_MPS: infinite
     J: [-0.5, -0.5, -0.5]
     D: [0., 0., 1.]
-    Bz: 0
+    Bz: -0.3
 
 initial_state_params:
     method: desired_bond_dimension
@@ -33,12 +33,12 @@ algorithm_class: SingleSiteDMRGEngine
 algorithm_params:
     trunc_params:
         svd_min: 1.e-12
-        chi_max: 32
-    chi_list: {0: 1}
+        chi_max: 8
+    chi_list: {0: 1, 10: 8, 20: 8}
     mixer: SubspaceExpansion
     mixer_params: {
-            amplitude: 1.e-2,
-            decay: 1.5,
+            amplitude: 1.e-0,
+            decay: 10,
             disable_after: 9,
         }
     diag_method: lanczos
@@ -48,8 +48,8 @@ algorithm_params:
         N_cache: 3
         reortho: False
     N_sweeps_check: 1
-    max_E_err: 1.e-8
-    max_S_err: 1.e-5
+    max_E_err: 1.e-10
+    max_S_err: 1.e-6
     max_sweeps: 300
 
 connect_measurements:
