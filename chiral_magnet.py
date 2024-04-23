@@ -144,7 +144,7 @@ class MySpinChain(chiral_magnet, NearestNeighborModel):
     default_lattice = Chain
     force_default_lattice = True
 
-def measure_lobs(results, psi, model, simulation, tol=0.01):
+def measurements(results, psi, model, simulation, tol=0.01):
     pos = np.asarray([model.lat.position(model.lat.mps2lat_idx(i)) for i in range(psi.L)])
     pos_av = np.mean(pos, axis=0)
     pos = pos - pos_av
