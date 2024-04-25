@@ -47,3 +47,8 @@ keys = ['sweep', 'E', 'Delta_E', 'S', 'max_S', 'max_E_trunc']
 df = pd.DataFrame()
 for k in keys:
     df[k] = info['sweep_statistics'][k]
+
+data = {"psi": psi, "parameters": params['model_params']}
+
+with h5py.File(f"{params[]}/save.h5", 'w') as f:
+    hdf5_io.save_to_hdf5(f, data)

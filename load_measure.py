@@ -3,22 +3,20 @@ from tenpy.tools import hdf5_io
 import numpy as np
 from tenpy.models import lattice
 from aux.find_files import find_files
-import matplotlib.pyplot as plt
-import matplotlib as mpl
-import os
+from aux.plot_lobs import plot_lobs
+import os, copy
 from chiral_magnet import my_square
-mpl.rcParams['text.usetex'] = True
-# mpl.rcParams['figure.figsize'] = (20,20)
-# plt.rc('text.latex', preamble=r'\usepackage{bm,braket}')
+from my_correlation import concurrence
 
 import pandas as pd
 
 dir = 'out/'
-fn = f'{dir}dmrg_chi_64_Bz_-0.6125_Lx_251_Ly_9_bc_finite.h5'
 
-chis = [128]
-sstr = [f'*chi_{chi}*Lx_151*finite.h5' for chi in chis]
+chis = [64]
+sstr = [f'*chi_{chi}*finite.h5' for chi in chis]
 fnss = [np.sort(find_files(s, dir)) for s in sstr]
+
+compute_correlations = False
 
 out_dir = 'plots/'
 os.makedirs(out_dir, exist_ok=True)
@@ -29,6 +27,7 @@ for fns in fnss:
         try:
             with h5py.File(fn, 'r') as f:
                 # or for partial reading:
+                ene = hdf5_io.load_from_hdf5(f, "/energy")
                 psi = hdf5_io.load_from_hdf5(f, "/psi")
                 # mms = hdf5_io.load_from_hdf5(f, "/measurements")
                 sim = hdf5_io.load_from_hdf5(f, "/simulation_parameters")
@@ -45,6 +44,12 @@ for fns in fnss:
         pos = pos - pos_av
         print('Lattice recreated.')
 
+        # make sure the MPS it's in canonical form
+        if not np.linalg.norm(psi.norm_test()) < 1e-10:
+            print(f'Norm test failed. Continue with next measurement.')
+            continue
+        # psi.canonical_form()
+
         exp_Sx = psi.expectation_value("Sx")
         print('Computed Sx')
         exp_Sy = psi.expectation_value("Sy")
@@ -57,7 +62,22 @@ for fns in fnss:
         # print('Computed Sm')
 
         vNEE = psi.entanglement_entropy()
-        vNEE = np.append(vNEE, 0)
+        # vNEE = np.append(vNEE, 0)
+        print('Computed vNEE')
+
+        if compute_correlations:
+            xs, ys = np.meshgrid(pos[:,0], pos[:,1])
+            xs, ys = xs.flatten(), ys.flatten()
+            cc = abs(concurrence(psi, 'Sy', 'Sy').flatten())
+            print('Computed concurrence')
+
+            df = pd.DataFrame()
+            df['x'] = xs
+            df['y'] = ys
+            df['cc'] = cc
+            fn_csv = fn.replace('.h5','_corr.csv')
+            df.to_csv(fn_csv)
+
 
         abs_exp_Svec = np.sqrt(np.power(exp_Sx,2) + np.power(exp_Sy,2) + np.power(exp_Sz,2))
 
@@ -71,27 +91,10 @@ for fns in fnss:
         # df['S_+'] = exp_Sp
         # df['S_-'] = exp_Sm
         df['S'] = (df['S_x']**2 + df['S_y']**2 + df['S_z']**2)**0.5
-
-        fn_csv = fn.replace('.h5','.csv')
+        fn_csv = fn.replace('.h5','_lobs.csv')
         df.to_csv(fn_csv)
 
         print(f'expectation values computed and CSV saved: {fn_csv}')
 
-        mkr = 's'
-        ms = 30
-        ms = 4
-
-        fig, ax = plt.subplots(1,1)
-        imag = ax.scatter(df['x'], df['y'], marker=mkr, edgecolor='None', s=ms, cmap='viridis', c=df['S_z'], vmin=-0.5, vmax=0.5)
-        ax.quiver(df['x'], df['y'], df['S_x'], df['S_y'], units='xy', width=0.07, scale=0.5, pivot='middle', color='white')
-        ax.set_aspect('equal')
-        ax.set_title('$\\langle \\vec S_{i} \\rangle$')
-
-        # fig.colorbar(imag)
-        ax.axis('off')
-
         fn_repl = fn.replace(dir, out_dir).replace('.h5', '.jpg')
-        plt.tight_layout()
-        plt.savefig(fn_repl, dpi=600, bbox_inches='tight')
-        plt.close()
-        print(fn_repl)
+        plot_lobs(df, fn_repl, ms=1000, title=f'Energy density: {ene}')
