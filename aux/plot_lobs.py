@@ -7,10 +7,10 @@ def plot_lobs(df, fn, ms=3500, mkr = 's', title='Default title'):
 
     fig, ax = plt.subplots(1,1)
 
-    imag = ax.scatter(df['x'], df['y'], marker=mkr, edgecolor='None', s=ms, cmap='viridis', c=df['S'])
+    imag = ax.scatter(df['x'], df['y'], marker=mkr, edgecolor='None', s=ms, cmap='viridis', c=df['S'], vmin=0, vmax=0.5)
     ax.quiver(df['x'], df['y'], df['S_x'], df['S_y'], units='xy', width=0.07, scale=0.5, pivot='middle', color='white')
     ax.set_aspect('equal')
-    ax.set_title('$\\langle \\vec S_{i} \\rangle$')
+    ax.set_title(title)
 
     axins = inset_axes(
         ax,
@@ -26,8 +26,6 @@ def plot_lobs(df, fn, ms=3500, mkr = 's', title='Default title'):
 
     ax.set_xlim([min(df['x'])-0.5, max(df['x'])+0.5])
     ax.set_ylim([min(df['y'])-0.5, max(df['y'])+0.5])
-
-    fig.suptitle(title)
 
     plt.tight_layout()
     plt.savefig(fn, dpi=600, bbox_inches='tight')

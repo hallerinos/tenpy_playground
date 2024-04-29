@@ -5,14 +5,14 @@ from tenpy.models import lattice
 from aux.find_files import find_files
 from aux.plot_lobs import plot_lobs
 import os, copy
-from chiral_magnet import my_square
+from chiral_magnet import my_square, my_triangular
 from my_correlation import concurrence
 
 import pandas as pd
 
 dir = 'out/'
 
-chis = [64]
+chis = [32, 64, 128, 256]
 sstr = [f'*chi_{chi}*finite.h5' for chi in chis]
 fnss = [np.sort(find_files(s, dir)) for s in sstr]
 
@@ -38,7 +38,7 @@ for fns in fnss:
         print(f'{fn} loaded')
 
         mps = sim['model_params']
-        lat = my_square(mps['Lx'], mps['Ly'], None, bc=[mps['bc_x'], mps['bc_y']])
+        lat = my_triangular(mps['Lx'], mps['Ly'], None, bc=[mps['bc_x'], mps['bc_y']])
         pos = np.asarray([lat.position(lat.mps2lat_idx(i)) for i in range(psi.L)])
         pos_av = np.mean(pos, axis=0)
         pos = pos - pos_av
@@ -97,4 +97,4 @@ for fns in fnss:
         print(f'expectation values computed and CSV saved: {fn_csv}')
 
         fn_repl = fn.replace(dir, out_dir).replace('.h5', '.jpg')
-        plot_lobs(df, fn_repl, ms=1000, title=f'Energy density: {ene}')
+        plot_lobs(df, fn_repl, mkr='h', ms=800, title=f'Energy density: {ene}')

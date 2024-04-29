@@ -29,6 +29,12 @@ fn = f'{dir}/dmrg_chi_512_Bz_-0.6250_Lx_12_Ly_7_bc_infinite.h5'
 dir = '/work/projects/tmqs_projects/skyrmion_liquid/Ly9_different_Lx_1'
 fn = f'{dir}/dmrg_chi_128_Bz_-0.5078_Lx_30_Ly_9_bc_infinite.h5'
 
+dir = 'out/'
+fn = f'{dir}/dmrg_chi_32_Lx_14_Ly_7_Bz_-0.8500_bc_infinite.h5'
+fn = f'{dir}/dmrg_chi_64_Lx_14_Ly_7_Bz_-0.8500_bc_infinite.h5'
+fn = f'{dir}/dmrg_chi_128_Lx_14_Ly_7_Bz_-0.8500_bc_infinite.h5'
+fn = f'{dir}/dmrg_chi_256_Lx_14_Ly_7_Bz_-0.8500_bc_infinite.h5'
+
 out_dir = 'plots'
 os.makedirs(out_dir, exist_ok=True)
 
@@ -41,8 +47,8 @@ try:
 except:
     print(f'file: {fn} not readable')
 
-# cL = psi.correlation_length()
-# print(cL/psi.L)
+cL = psi.correlation_length()
+print(cL)
 
 for o12 in ['zz','xx', 'yy', 'xy', 'yz']:
         fig, axs = plt.subplots(3,2,sharex=True,sharey=False)
@@ -53,12 +59,12 @@ for o12 in ['zz','xx', 'yy', 'xy', 'yz']:
         o2 = f'S{b}'
         print(o1, o2)
         # for jy in range(sim['model_params']['Lx']):
-        for jy in [2,3,4]:
-            pos = 4 + sim['model_params']['Ly']*jy
-            print(jy, pos)
+        for jy in [1,6,13]:
+            pos = 3 + sim['model_params']['Ly']*jy
+            print(jy, pos, psi.L)
             sites1 = [pos]
             step = 1
-            sites2 = range(pos+step, 6*psi.L+pos+1, step)
+            sites2 = range(pos+step, 8*psi.L+pos+1, step)
 
             corr = np.asarray(psi.correlation_function(o1, o2,  sites1=sites1, sites2=sites2))
             conn1 = np.asarray(psi.expectation_value(o1, sites=sites1))
@@ -73,7 +79,7 @@ for o12 in ['zz','xx', 'yy', 'xy', 'yz']:
                 data_im = np.imag(Ys[0])
                 im = axs[2*idy].plot(np.asarray(sites2)/psi.L, np.abs(data_re), alpha=0.4, linewidth=0.2)
                 col = im[0].get_color()
-                axs[2*idy].scatter(np.asarray(sites2)[::sim['model_params']['Ly']]/psi.L, np.abs(data_re[::sim['model_params']['Ly']]), alpha=0.4, color=col)
+                axs[2*idy].plot(np.asarray(sites2)[::sim['model_params']['Ly']]/psi.L, np.abs(data_re[::sim['model_params']['Ly']]), alpha=0.4, color=col)
                 axs[2*idy].plot(np.asarray(sites2)[::psi.L]/psi.L, np.abs(data_re[::psi.L]), color=col)
                 if np.linalg.norm(data_im) < 1e-5: continue
                 axs[2*idy+1].plot(np.asarray(sites2)/psi.L, data_im)

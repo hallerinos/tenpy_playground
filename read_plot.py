@@ -16,7 +16,7 @@ dir = 'out'
 out_dir = 'plots'
 os.makedirs(out_dir, exist_ok=True)
 
-chis = ['64']
+chis = ['256']
 sstr = [f'*chi_{chi}*finite.h5' for chi in chis]
 
 # lxs = range(3,16)

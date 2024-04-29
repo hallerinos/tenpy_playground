@@ -99,13 +99,28 @@ class chiral_magnet(CouplingMPOModel):
                 dist = rj-ri
 
                 pt = False
+                Lx = model_params['Lx']
+                Ly = model_params['Ly']
+                pbc1 = (Ly-1)*self.lat.basis[1]
+                pbc2 = (Ly-1)*self.lat.basis[1]+self.lat.basis[0]
+                pbc3 = (Lx-1)*self.lat.basis[0]
+                pbc4 = (Lx-1)*self.lat.basis[0] + self.lat.basis[1]
+                pbc5 = (Lx-1)*self.lat.basis[0] - (Ly-1)*self.lat.basis[1]
                 if np.linalg.norm(dist) > 1+1e-6:
-                    if dist[0]>0:
-                        if model_params['lattice'] == 'my_square':
-                            dist = np.asarray([-1., 0.])
-                    if dist[1]>0:
-                        if model_params['lattice'] == 'my_square':
-                            dist = np.asarray([0., -1.])
+                    if np.linalg.norm(dist - pbc1) <= 1e-6:
+                        dist = -self.lat.basis[1]
+                        # ax.quiver(ri[0], ri[1], dist[0], dist[1], units='xy', scale=1, color='red')
+                    if np.linalg.norm(dist - pbc2) <= 1e-6:
+                        dist = self.lat.basis[0]-self.lat.basis[1]
+                        # ax.quiver(ri[0], ri[1], dist[0], dist[1], units='xy', scale=1, color='red')
+                    if np.linalg.norm(dist - pbc3) <= 1e-6:
+                        dist = -self.lat.basis[0]
+                        # ax.quiver(ri[0], ri[1], dist[0], dist[1], linewidth=100, units='xy', scale=1, color='green')
+                    if np.linalg.norm(dist - pbc4) <= 1e-6:
+                        dist = self.lat.basis[1]-self.lat.basis[0]
+                        # ax.quiver(ri[0], ri[1], dist[0], dist[1], linewidth=100, units='xy', scale=1, color='green')
+                    if np.linalg.norm(dist - pbc5) <= 1e-6:
+                        dist = self.lat.basis[1]-self.lat.basis[0]
                     pt = True
                 ax.quiver(*ri, dist[0], dist[1], units='xy', scale=1, zorder=-1)
                 sc = ax.scatter(*ri, marker='x', s=100)
