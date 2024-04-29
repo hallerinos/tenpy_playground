@@ -12,7 +12,7 @@ import pandas as pd
 
 dir = 'out/'
 
-chis = [32, 64, 128, 256]
+chis = [128]
 sstr = [f'*chi_{chi}*finite.h5' for chi in chis]
 fnss = [np.sort(find_files(s, dir)) for s in sstr]
 
@@ -38,7 +38,7 @@ for fns in fnss:
         print(f'{fn} loaded')
 
         mps = sim['model_params']
-        lat = my_triangular(mps['Lx'], mps['Ly'], None, bc=[mps['bc_x'], mps['bc_y']])
+        lat = eval(sim['model_params']['lattice'])(mps['Lx'], mps['Ly'], None, bc=[mps['bc_x'], mps['bc_y']])
         pos = np.asarray([lat.position(lat.mps2lat_idx(i)) for i in range(psi.L)])
         pos_av = np.mean(pos, axis=0)
         pos = pos - pos_av
