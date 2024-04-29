@@ -1,0 +1,70 @@
+algorithm_class: SingleSiteDMRGEngine
+algorithm_params:
+  N_sweeps_check: 1
+  diag_method: lanczos
+  lanczos_params:
+    N_cache: 3
+    N_max: 20
+    N_min: 2
+    reortho: false
+  max_E_err: 1.0e-09
+  max_sweeps: 50
+  trunc_params:
+    chi_max: 512
+    svd_min: 1.0e-12
+  mixer: SubspaceExpansion
+  mixer_params: {
+          amplitude: 1.e-2,
+          decay: 1.5,
+          disable_after: 9,
+      }
+  diag_method: lanczos
+  lanczos_params:
+      N_max: 3
+      N_min: 2
+      N_cache: 3
+      reortho: False
+directory: out
+initial_state_params:
+  chi: 1
+  method: desired_bond_dimension
+log_params:
+  logger_levels:
+    tenpy.tools.params: WARNING
+  to_file: INFO
+  to_stdout: INFO
+measure_at_algorithm_checkpoints: false
+measure_initial: false
+model_class: chiral_magnet
+model_params:
+  Bz: [-0.3,-0.4,-0.5,-0.6,-0.7, .75, .76, .77, .78, .79,-0.8,-0.9]
+  D:
+  - 0.0
+  - 0.0
+  - 1.0
+  J:
+  - -0.5
+  - -0.5
+  - -0.5
+  Lx: 5
+  Ly: 5
+  bc_MPS: infinite
+  bc_classical: true
+  bc_y: periodic
+  lattice: my_triangular
+output_filename_params:
+  parts:
+    algorithm_params.trunc_params.chi_max: chi_{0:d}
+    model_params.Bz: Bz_{0:.4f}
+    model_params.Lx: Lx_{0:d}
+    model_params.Ly: Ly_{0:d}
+    model_params.bc_MPS: bc_{:s}
+  prefix: dmrg
+  suffix: .h5
+save_every_x_seconds: 1800
+save_stats: false
+sequential:
+  recursive_keys:
+  - model_params.Bz
+simulation_class: GroundStateSearch
+use_default_measurements: false
