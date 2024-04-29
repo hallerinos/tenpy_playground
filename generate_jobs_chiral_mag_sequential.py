@@ -16,7 +16,7 @@ except OSError as e:
 # create directory for the simulation yml files
 os.makedirs(dir_out, exist_ok=1)
 
-with open('cm_square.yml', 'r') as file:
+with open('cm_triangular.yml', 'r') as file:
     default = yaml.safe_load(file)
 
 cfg = 0

@@ -16,7 +16,7 @@ model_class: chiral_magnet
 model_params:
     lattice: my_triangular
     Lx: 14
-    Ly: 7
+    Ly: 5
     # bc_x: periodic
     bc_y: periodic
     bc_classical: True

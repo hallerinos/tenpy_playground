@@ -12,7 +12,7 @@ import pandas as pd
 
 dir = 'out/'
 
-chis = [128]
+chis = [64]
 sstr = [f'*chi_{chi}*finite.h5' for chi in chis]
 fnss = [np.sort(find_files(s, dir)) for s in sstr]
 
