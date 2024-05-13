@@ -85,8 +85,8 @@ class chiral_magnet(CouplingMPOModel):
         # print(nn_pairs)
         ctr = 0
 
-        fig = plt.figure()
-        ax = fig.gca()
+        # fig = plt.figure()
+        # ax = fig.gca()
         for u1, u2, dx in nn_pairs:
             mps_i, mps_j, _, _ = self.lat.possible_couplings(u1, u2, dx)
             for i, j in zip(mps_i, mps_j):
@@ -122,15 +122,15 @@ class chiral_magnet(CouplingMPOModel):
                     if np.linalg.norm(dist - pbc5) <= 1e-6:
                         dist = self.lat.basis[1]-self.lat.basis[0]
                     pt = True
-                ax.quiver(*ri, dist[0], dist[1], units='xy', scale=1, zorder=-1)
-                sc = ax.scatter(*ri, marker='x', s=100)
-                col = sc.get_facecolors()[0].tolist()
-                sc = ax.scatter(*(ri+dist), marker='o', s=100, facecolors='none', edgecolors=col)
-                ax.annotate(f'{i}', xy=ri, color=col, xytext=(5,5), textcoords="offset points")
-                ax.annotate(f'{j}', xy=ri+dist, color=col, xytext=(5,-10), textcoords="offset points")
+                # ax.quiver(*ri, dist[0], dist[1], units='xy', scale=1, zorder=-1)
+                # sc = ax.scatter(*ri, marker='x', s=100)
+                # col = sc.get_facecolors()[0].tolist()
+                # sc = ax.scatter(*(ri+dist), marker='o', s=100, facecolors='none', edgecolors=col)
+                # ax.annotate(f'{i}', xy=ri, color=col, xytext=(5,5), textcoords="offset points")
+                # ax.annotate(f'{j}', xy=ri+dist, color=col, xytext=(5,-10), textcoords="offset points")
                 Dvec = np.cross(D, dist)
                 Dvec = Dvec/np.linalg.norm(Dvec)
-                ax.quiver(*(ri+dist/2.0), Dvec[0], Dvec[1], units='xy', scale=10, zorder=-1,color='gray')
+                # ax.quiver(*(ri+dist/2.0), Dvec[0], Dvec[1], units='xy', scale=10, zorder=-1,color='gray')
                 for k in range(3):
                     for l in range(3):
                         for m in range(3):
@@ -146,9 +146,9 @@ class chiral_magnet(CouplingMPOModel):
                 else:
                     for (Ji, Si) in zip(J, Svec):
                         self.add_coupling_term(Ji, i, j, Si, Si)
-                ax.set_aspect('equal')
-        plt.tight_layout()
-        plt.savefig('latt.png', dpi=600)
+        #         ax.set_aspect('equal')
+        # plt.tight_layout()
+        # plt.savefig('latt.png', dpi=600)
 
 
 class MySpinChain(chiral_magnet, NearestNeighborModel):

@@ -1,4 +1,4 @@
-algorithm_class: SingleSiteDMRGEngine
+algorithm_class: TwoSiteDMRGEngine
 algorithm_params:
   N_sweeps_check: 1
   diag_method: lanczos
@@ -10,14 +10,14 @@ algorithm_params:
   max_E_err: 1.0e-09
   max_sweeps: 50
   trunc_params:
-    chi_max: 512
+    chi_max: 1
     svd_min: 1.0e-12
-  mixer: SubspaceExpansion
-  mixer_params: {
-          amplitude: 1.e-2,
-          decay: 1.5,
-          disable_after: 9,
-      }
+  # mixer: SubspaceExpansion
+  # mixer_params: {
+  #         amplitude: 1.e-2,
+  #         decay: 1.5,
+  #         disable_after: 9,
+  #     }
   diag_method: lanczos
   lanczos_params:
       N_max: 3
@@ -37,7 +37,7 @@ measure_at_algorithm_checkpoints: false
 measure_initial: false
 model_class: chiral_magnet
 model_params:
-  Bz: [-0.3,-0.4,-0.5,-0.6,-0.7, .75, .76, .77, .78, .79,-0.8,-0.9]
+  Bz: -0.79
   D:
   - 0.0
   - 0.0
@@ -46,7 +46,7 @@ model_params:
   - -0.5
   - -0.5
   - -0.5
-  Lx: 5
+  Lx: 18
   Ly: 5
   bc_MPS: infinite
   bc_classical: true
