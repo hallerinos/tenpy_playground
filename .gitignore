@@ -10,3 +10,5 @@
 *.out
 nohup.out
 results/
+.DS_Store
+iTensor/tdvp/._.DS_Store

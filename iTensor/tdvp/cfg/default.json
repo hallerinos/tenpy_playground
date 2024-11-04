@@ -1,0 +1,75 @@
+{
+    "snorm": 0.5,
+    "boundary_conditions": "classical_environment",
+    "energy_tol": 1.0e-5,
+    "initial_MPS": "SKX",
+    "initial_MPS=": "MPS",
+    "initial_MPS==": "Dn",
+    "initial_MPS===": "rand",
+    "N_SK": 1,
+    "phi_sign": 1.0,
+    "SKX_w": 1.0,
+    "SKX_R": 5.0,
+    "SKX_e": 1.0,
+    "M": 1,
+    "Bgrad_slope": 0.00,
+    "csv_mps_corr": "corr.csv",
+    "io_dir": "sk",
+    "jld": "state.jld",
+    "lattice_C=": "triangular_flake",
+    "Bcr_stripe_D2_Ny7": [
+        0.0,
+        0.0,
+        -1.702
+    ],
+    "Bcr_square_D4_NxNy7": [
+        0.0,
+        0.0,
+        -4.549
+    ],
+    "Bcr_square_D4NxNy17": [
+        0.0,
+        0.0,
+        -4.545
+    ],
+    "B": [
+        0.0,
+        0.0,
+        -4.545
+    ],
+    "lattice": "rhomboid_zigzag",
+    "lattice_C": "rhomboid_zigzag",
+    "Nx": 19,
+    "Ny": 19,
+    "2sweeps": 4,
+    "sweeps": 100,
+    "tdvp_sweeps": 0,
+    "tmax": 500,
+    "save_psi(t)": false,
+    "alpha": 1.0,
+    "alpha_ax": 1,
+    "D": [
+        0.0,
+        0.0,
+        -4.0
+    ],
+    "hdf5_final": "state.h5",
+    "hdf5_initial": "sk/state.h5",
+    "B0_sigma": 0.5,
+    "B0": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "csv_mps": "lobs.csv",
+    "J": -1.0,
+    "cutoff_tol": 1.0e-16,
+    "B0_loc_1": [
+        0,
+        0,
+        0
+    ],
+    "outputlevel": 1,
+    "tdvp_order": 1,
+    "K": 0.0
+}

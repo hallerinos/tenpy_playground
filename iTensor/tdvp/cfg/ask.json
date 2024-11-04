@@ -1,0 +1,61 @@
+{
+    "snorm": 0.5,
+    "boundary_conditions": "classical_environment",
+    "energy_tol": 1.0e-10,
+    "initial_MPS": "MPS",
+    "initial_MPS==": "SKX",
+    "SKX_w": 1.0,
+    "Bgrad_slope": 0.02,
+    "csv_mps_corr": "corr.csv",
+    "io_dir": "ask",
+    "jld": "state.jld",
+    "SKX_R": 4.0,
+    "lattice_C=": "triangular_flake",
+    "N_SK": 1,
+    "B": [
+        0.0,
+        0.0,
+        -0.075
+    ],
+    "lattice=": "triangular_flake_hole",
+    "M": 1,
+    "lattice": "square",
+    "tdvp_sweeps": 500,
+    "tmax": 500,
+    "sweeps": 500,
+    "initial_MPS=": "Dn",
+    "initial_MPS===": "rand",
+    "phi_sign": -1.0,
+    "Nx": 31,
+    "save_psi(t)": true,
+    "alpha": 0.0,
+    "B0_sigma": 0.5,
+    "Ny": 13,
+    "D": [
+        0.0,
+        0.0,
+        -0.5
+    ],
+    "lattice_C": "square",
+    "hdf5_final": "state.h5",
+    "hdf5_initial": "ask/state.h5",
+    "B0": [
+        0.0,
+        0.0,
+        0.001
+    ],
+    "csv_mps": "lobs.csv",
+    "J": -1.0,
+    "cutoff_tol": 1.0e-16,
+    "B0_loc_1": [
+        0,
+        0,
+        0
+    ],
+    "alpha_ax": 1,
+    "outputlevel": 1,
+    "boundary_conditions=": "pbc",
+    "tdvp_order": 1,
+    "SKX_e": 1.25,
+    "K": -0.0
+}
